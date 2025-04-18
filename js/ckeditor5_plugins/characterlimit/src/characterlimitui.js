@@ -2,6 +2,10 @@ import { Plugin } from 'ckeditor5/src/core';
 import { ButtonView } from 'ckeditor5/src/ui';
 
 export default class CharacterLimitUI extends Plugin {
+  static get pluginName() {
+    return 'CharacterLimitUI';
+  }
+
   init() {
     const editor = this.editor;
     const t = editor.t;
@@ -17,32 +21,25 @@ export default class CharacterLimitUI extends Plugin {
     
     const maxChars = editor.config.get('BUFCharacterLimit.maxChars') || 500;
     
-    // Создаем кнопку только после полной инициализации редактора
+    // Создаем элемент для тулбара
     editor.ui.componentFactory.add('characterCounter', () => {
-      const characterCounterView = new ButtonView();
-      characterCounterView.set({
-        label: '0/' + maxChars,
-        tooltip: t('Character count'),
+      const view = new ButtonView();
+      
+      // Инициализируем с начальным значением
+      view.set({
+        label: `0/${maxChars}`,
         withText: true,
+        tooltip: t('Character count'),
         class: 'ck-character-counter'
       });
       
-      // Применяем стили после рендеринга
-      characterCounterView.on('render', () => {
-        if (characterCounterView.element) {
-          characterCounterView.element.classList.add('ck-character-counter-button');
-        }
-      });
-      
-      // Отключаем действие по нажатию
-      characterCounterView.on('execute', () => {
+      // Отключаем действие по клику
+      view.on('execute', () => {
         return false;
       });
       
       // Обновляем счетчик при изменении текста
       editor.on('characterCount', (evt, data) => {
-        if (!characterCounterView.element) return;
-        
         const { characters, remaining } = data;
         const isOverLimit = characters > maxChars;
         
@@ -56,19 +53,63 @@ export default class CharacterLimitUI extends Plugin {
           counterText = `${remaining}`;
         }
         
-        characterCounterView.set({
+        view.set({
           label: counterText
         });
         
-        // Добавляем класс при превышении лимита
-        if (isOverLimit) {
-          characterCounterView.element.classList.add('ck-character-counter--over-limit');
-        } else {
-          characterCounterView.element.classList.remove('ck-character-counter--over-limit');
+        if (isOverLimit && view.element) {
+          view.element.classList.add('ck-character-counter--over-limit');
+        } else if (view.element) {
+          view.element.classList.remove('ck-character-counter--over-limit');
         }
       });
       
-      return characterCounterView;
+      // Выполним начальный подсчет после инициализации редактора
+      editor.on('ready', () => {
+        // Подсчет символов при загрузке
+        const countChars = () => {
+          let count = 0;
+          const model = editor.model;
+          
+          // Простой подсчет символов
+          for (const rootName of model.document.getRootNames()) {
+            const root = model.document.getRoot(rootName);
+            for (const item of root.getChildren()) {
+              if (item.is('element')) {
+                count += countCharactersInElement(item);
+              }
+            }
+          }
+          
+          return count;
+        };
+        
+        // Вспомогательная функция для подсчета символов в элементе
+        const countCharactersInElement = (element) => {
+          let chars = 0;
+          
+          for (const node of element.getChildren()) {
+            if (node.is('text')) {
+              chars += node.data.length;
+            } else if (node.is('element')) {
+              chars += countCharactersInElement(node);
+            }
+          }
+          
+          return chars;
+        };
+        
+        const characters = countChars();
+        
+        // Установим начальное значение счетчика
+        editor.fire('characterCount', {
+          characters: characters,
+          maxCharacters: maxChars,
+          remaining: maxChars - characters
+        });
+      });
+      
+      return view;
     });
   }
 }

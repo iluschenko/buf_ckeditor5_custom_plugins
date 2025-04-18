@@ -14,4 +14,7 @@ buf_ckeditor5_custom_plugins_character_limit:
     library: buf_ckeditor5_custom_plugins/character-limit.editor
     admin_library: buf_ckeditor5_custom_plugins/character-limit.admin
     elements: false
+    toolbar_items:
+      characterCounter:
+        label: Character Counter
     class: Drupal\buf_ckeditor5_custom_plugins\Plugin\CKEditor5Plugin\CharacterLimit

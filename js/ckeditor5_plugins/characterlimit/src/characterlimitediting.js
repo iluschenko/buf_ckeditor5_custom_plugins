@@ -1,6 +1,10 @@
 import { Plugin } from 'ckeditor5/src/core';
 
 export default class CharacterLimitEditing extends Plugin {
+  static get pluginName() {
+    return 'CharacterLimitEditing';
+  }
+
   constructor(editor) {
     super(editor);
     this.editor = editor;
@@ -14,6 +18,20 @@ export default class CharacterLimitEditing extends Plugin {
     
     // Регистрация счетчика символов в состоянии редактора
     this._setupCharacterCounter(editor);
+    
+    // Экспортируем метод для использования в CharacterLimitUI
+    this._getCharacterCount = this._getCharacterCount.bind(this);
+    
+    // Инициализация счетчика при загрузке редактора
+    editor.on('ready', () => {
+      this.currentLength = this._getCharacterCount();
+      
+      editor.fire('characterCount', {
+        characters: this.currentLength,
+        maxCharacters: this.maxChars,
+        remaining: this.maxChars - this.currentLength
+      });
+    });
   }
 
   _setupCharacterCounter(editor) {
