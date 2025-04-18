@@ -1,0 +1,29 @@
+.ck-toolbar .ck-button.ck-character-counter {
+  margin-left: auto !important; /* Pushes the counter to the right */
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: #666 !important;
+  font-size: 12px;
+  padding: 0 10px !important;
+  margin-right: 5px;
+  pointer-events: none; /* Prevent interactions */
+  cursor: default;
+}
+
+.ck-toolbar .ck-button.ck-character-counter:hover,
+.ck-toolbar .ck-button.ck-character-counter:focus {
+  background: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.ck-toolbar .ck-button.ck-character-counter.ck-character-counter--over-limit {
+  color: #d92626 !important;
+  font-weight: bold;
+}
+
+/* Ensure the counter is always at the end of the toolbar */
+.ck-toolbar__items > .ck-character-counter {
+  order: 999 !important;
+}

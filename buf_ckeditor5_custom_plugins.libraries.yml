@@ -1,0 +1,18 @@
+character-limit.editor:
+  js:
+    js/build/characterlimit.js: { minified: true }
+  css:
+    component:
+      css/character-limit.css: {}
+  dependencies:
+    - core/ckeditor5
+
+character-limit.admin:
+  js:
+    js/build/characterlimit.js: { minified: true }
+  css:
+    theme:
+      css/character-limit.css: {}
+  dependencies:
+    - core/drupal
+    - core/ckeditor5

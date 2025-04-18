@@ -1,0 +1,19 @@
+ckeditor5.plugin.buf_ckeditor5_custom_plugins_character_limit:
+  type: mapping
+  label: 'Character Limit settings'
+  mapping:
+    enabled:
+      type: boolean
+      label: 'Enable the counter'
+    showRemaining:
+      type: boolean
+      label: 'Show remaining'
+    showCharacterCount:
+      type: boolean
+      label: 'Show the characters count'
+    maxCharacters:
+      type: integer
+      label: 'Maximum characters limit'
+    lockEditor:
+      type: boolean
+      label: 'Lock editor when limit is reached'

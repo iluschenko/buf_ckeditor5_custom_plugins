@@ -1,0 +1,7 @@
+name: 'BUF CKEditor 5 Custom Plugins'
+type: module
+description: 'Provides custom plugins for CKEditor 5 in Drupal 10.'
+package: 'CKEditor 5'
+core_version_requirement: ^10
+dependencies:
+  - drupal:ckeditor5

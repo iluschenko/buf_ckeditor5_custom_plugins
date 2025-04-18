@@ -1,0 +1,17 @@
+buf_ckeditor5_custom_plugins_character_limit:
+  ckeditor5:
+    plugins:
+      - characterlimit.BUFCharacterLimit
+    config:
+      BUFCharacterLimit:
+        enabled: true
+        showRemaining: false
+        showCharacterCount: true
+        maxChars: 1500
+        lockEditor: true
+  drupal:
+    label: Character Limit
+    library: buf_ckeditor5_custom_plugins/character-limit.editor
+    admin_library: buf_ckeditor5_custom_plugins/character-limit.admin
+    elements: false
+    class: Drupal\buf_ckeditor5_custom_plugins\Plugin\CKEditor5Plugin\CharacterLimit
